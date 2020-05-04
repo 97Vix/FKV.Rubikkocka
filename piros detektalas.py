@@ -38,10 +38,7 @@ for contour in contours:
 img2 = img
 hsv = cv2.cvtColor(img2, cv2.COLOR_BGR2HSV)
  
- 
-#Red color rangle  169, 100, 100 , 189, 255, 255
- #majdnem jo piros 0.100,100   189,200,150
- # jobb piros 0,120,100    179,200,155
+
  
 lower_range = np.array([50,50,150])
 upper_range = np.array([150,150,180])
