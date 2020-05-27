@@ -53,6 +53,8 @@ for M in range(2):
 
 
     #Most bejelölöm a négyzeteket 
+    w2=0
+    h2=0
     img = cv2.imread('F1mask1.png')
     imgGrey = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     _, thrash = cv2.threshold(imgGrey, 240, 255, cv2.THRESH_BINARY)
@@ -66,7 +68,9 @@ for M in range(2):
         if len(approx) == 4:
             x1 ,y1, w, h = cv2.boundingRect(approx)
             aspectRatio = float(w)/h
-            if w >500 and h>500: #ez még át lesz alakítva
+            if w > w2 and h>h2 and aspectRatio >= 0.50 and aspectRatio <= 1.5:
+                w2=w
+                h2=h
                 t=approx
 
     #3. rész ,számolás
