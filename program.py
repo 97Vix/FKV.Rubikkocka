@@ -36,7 +36,7 @@ fontos hogy 0 tól legyenek számozva a képek és jpg formátúmbaman
 képek darabszámát kell beírni a következő sorban
 """
 for M in range(6):
-    #M=kepneve #ha csak egy képet akarunk beilleszteni akkor a nevét tegyük egyenlővé az M-mel,legyen még for-ban M hossza 1
+    #M="kepneve" #ha csak egy képet akarunk beilleszteni akkor a nevét tegyük egyenlővé az M-mel,legyen még for-ban M hossza 1
     #itt ez a rész emeli a kép fényerejét
     im = Image.open(str(M)+".jpg")
     enhancer = ImageEnhance.Brightness(im)
@@ -44,8 +44,8 @@ for M in range(6):
     enhanced_im.save("vilagos.jpg")
     
     #Kiemelem a fekete színt ,ezzel azonosítva be a kockát
-    Pic="vilagos.jpg"
-    img2 = cv2.imread(Pic)
+    
+    img2 = cv2.imread("vilagos.jpg")
     hsv = cv2.cvtColor(img2, cv2.COLOR_BGR2HSV)
     #Ezzel az intervalummal találta meg  a feketét
     lower_range = np.array([0,0,0])
@@ -53,14 +53,13 @@ for M in range(6):
     
     mask = cv2.inRange(hsv, lower_range, upper_range)
 
-    cv2.imshow('mask', mask)
-    cv2.imwrite("F1mask1.png", mask)
+    cv2.imwrite("smask.png", mask)
 
 
     #Most bejelölöm a négyzeteket
     w2=0
     h2=0
-    img = cv2.imread('F1mask1.png')
+    img = cv2.imread('smask.png')
     imgGrey = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     _, thrash = cv2.threshold(imgGrey, 240, 255, cv2.THRESH_BINARY)
     contours, _ = cv2.findContours(thrash, cv2.RETR_TREE, cv2.CHAIN_APPROX_NONE)
@@ -79,7 +78,6 @@ for M in range(6):
                 t=approx
                 
     #3. rész ,számolás
-    cv2.imshow('img', img)
 
     CN=[]
     sz=[1,2,3,4,5,6] 
@@ -136,13 +134,12 @@ for M in range(6):
                 
             #a szín lekérdezése /azonosítása/tárolása CN-ben
             #más színek esetén át kell írni az RGB értékeket az ifekben
-            img2 = cv2.imread(str(M)+".jpg")
             color=img2[sz[5]][sz[4]]
             interv=10
-            while interv<100:
+            while interv<150:
                 interv=interv+5
                 #piros
-                if color[2]>=125-interv and color[2]<=125+interv and color[1]>=35-interv and color[1]<=35+interv and color[0]>=35-interv and color[0]<=35+interv  :
+                if color[2]>=150-interv and color[2]<=150+interv and color[1]>=45-interv and color[1]<=45+interv and color[0]>=45-interv and color[0]<=45+interv  :
                     
                     CN.append("R")
                     break
@@ -172,7 +169,7 @@ for M in range(6):
                     CN.append("W")
                     break
 
-    # itt CN segítségével feltölti az oldalt
+    # itt CN segítségével feltölti az oldalt ha nem talál meg 9 színt akkor hibás lesz
     for i in range(6) :
         if CN[0] == Cube[i][1][1]:
             
