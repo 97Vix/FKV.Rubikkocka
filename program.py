@@ -1,5 +1,6 @@
 import numpy as np
 import cv2
+from PIL import Image, ImageEnhance 
 
 """
 Részek
@@ -32,27 +33,31 @@ for i in range(6):
 2.rész
 itt fog majd a képek száma alapján beolvasni
 fontos hogy 0 tól legyenek számozva a képek és jpg formátúmbaman
-képek darabszámát kell beírni a következő sorban a kettes helyére
-amennyiben más a képformátúm a .jpg-t át kell írni
+képek darabszámát kell beírni a következő sorban
 """
-for M in range(2):
-    Pic=str(M)+str(".jpg")
-    #Kiemelem a fekete színt
+for M in range(6):
+    #M=kepneve #ha csak egy képet akarunk beilleszteni akkor a nevét tegyük egyenlővé az M-mel,legyen még for-ban M hossza 1
+    #itt ez a rész emeli a kép fényerejét
+    im = Image.open(str(M)+".jpg")
+    enhancer = ImageEnhance.Brightness(im)
+    enhanced_im = enhancer.enhance(1.2)
+    enhanced_im.save("vilagos.jpg")
+    
+    #Kiemelem a fekete színt ,ezzel azonosítva be a kockát
+    Pic="vilagos.jpg"
     img2 = cv2.imread(Pic)
     hsv = cv2.cvtColor(img2, cv2.COLOR_BGR2HSV)
-
-
     #Ezzel az intervalummal találta meg  a feketét
     lower_range = np.array([0,0,0])
-    upper_range = np.array([244,104,150])
-     
+    upper_range = np.array([244,179,125])
+    
     mask = cv2.inRange(hsv, lower_range, upper_range)
 
     cv2.imshow('mask', mask)
     cv2.imwrite("F1mask1.png", mask)
 
 
-    #Most bejelölöm a négyzeteket 
+    #Most bejelölöm a négyzeteket
     w2=0
     h2=0
     img = cv2.imread('F1mask1.png')
@@ -68,13 +73,14 @@ for M in range(2):
         if len(approx) == 4:
             x1 ,y1, w, h = cv2.boundingRect(approx)
             aspectRatio = float(w)/h
-            if w > w2 and h>h2 and aspectRatio >= 0.50 and aspectRatio <= 1.5:
+            if w > w2 and h>h2 and aspectRatio >= 0.50 and aspectRatio <= 1.5 :
                 w2=w
                 h2=h
                 t=approx
-
-    #3. rész ,számolás
                 
+    #3. rész ,számolás
+    cv2.imshow('img', img)
+
     CN=[]
     sz=[1,2,3,4,5,6] 
     for i in range(3):
@@ -130,6 +136,7 @@ for M in range(2):
                 
             #a szín lekérdezése /azonosítása/tárolása CN-ben
             #más színek esetén át kell írni az RGB értékeket az ifekben
+            img2 = cv2.imread(str(M)+".jpg")
             color=img2[sz[5]][sz[4]]
             interv=10
             while interv<100:
@@ -157,7 +164,6 @@ for M in range(2):
                 #zöld
                 if color[2]>=20-interv and color[2]<=20+interv and color[1]>=135-interv and color[1]<=135+interv and color[0]>=40-interv and color[0]<=40+interv  :
                 
-                    print("zöld")
                     CN.append("G")
                     break           
                 #fehér
