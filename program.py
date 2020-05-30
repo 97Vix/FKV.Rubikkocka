@@ -131,10 +131,21 @@ for M in range(6):
                 x=x+4
                 sz[x]=int(a+(b-a)/c)
                 x2=x2+1
-                
+            #Itt átlagol
+            # a sugara az átlagolásnak az R
+            R=5
+            AVG=[0,0,0]
+            R=R*2+1
+            k1=sz[5]-R
+            k2=sz[4]-R
+            for i in range(R):
+                for y in range(R):
+                    AVG=AVG+img2[k1+i][k2+y]
+            AVG=(AVG/(R*R))
+            AVG=AVG.astype('i')
             #a szín lekérdezése /azonosítása/tárolása CN-ben
             #más színek esetén át kell írni az RGB értékeket az ifekben
-            color=img2[sz[5]][sz[4]]
+            color=AVG
             interv=10
             while interv<150:
                 interv=interv+5
