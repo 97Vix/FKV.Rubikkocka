@@ -36,7 +36,8 @@ fontos hogy 0 tól legyenek számozva a képek és jpg formátúmbaman
 képek darabszámát kell beírni a következő sorban
 """
 for M in range(6):
-    #M="kepneve" #ha csak egy képet akarunk beilleszteni akkor a nevét tegyük egyenlővé az M-mel,legyen még for-ban M hossza 1
+    
+     #ha csak egy képet akarunk beilleszteni akkor a nevét tegyük egyenlővé az M-mel,legyen még for-ban M hossza 1
     #itt ez a rész emeli a kép fényerejét
     im = Image.open(str(M)+".jpg")
     enhancer = ImageEnhance.Brightness(im)
@@ -78,11 +79,48 @@ for M in range(6):
                 t=approx
                 
     #3. rész ,számolás
-
+    #itt a számolás előtt sorbarendezem a koordinátákat
+    #t dimenzió csökkentése
+    t = np.squeeze(t, axis = 1)
+    #segédtömbök a rendsezéshez
+    t2 = [[0,0],
+          [0,0],
+          [0,0],
+          [0,0]]
+    t3 = [[0,0],
+          [0,0],
+          [0,0],
+          [0,0]]
+    #koordináta összegek elmentése
+    for i in range(4):
+        t2[i][0]=t[i][0]+t[i][1]
+        t2[i][1]=i
+    #legkisebb koordináta bal felő sarok
+    k=min(t2)
+    t3[0]=t[k[1]]
+    for i in range(len(t2)):
+        if t2[i][1] == k[1]:
+            del t2[i]
+            break
+    #legnaygobb koordináta összeg jobb alsó sarok
+    k=max(t2)
+    t3[2]=t[k[1]]
+    for i in range(len(t2)):
+        if t2[i][1] == k[1]:
+            del t2[i]
+            break
+    #amelyik Y értékének magasabb a maradék kettőnek az lesz a jobb alsó sarok
+    if t[t2[0][1]][1] > t[t2[1][1]][1]:
+        t3[1]=t[t2[0][1]]
+        t3[3]=t[t2[1][1]]
+    else:
+        t3[3]=t[t2[0][1]]
+        t3[1]=t[t2[1][1]]
+    t=t3
+    #koordinátákból számolás
     CN=[]
     sz=[1,2,3,4,5,6] 
     for i in range(3):
-
     #itt kiszámolom a két oldal közepét és eltárolom
         if i==0:
             c=2
@@ -104,8 +142,8 @@ for M in range(6):
             if x2 == 2:
                 x2=0
                 
-            a=t[k1][0][x2]
-            b=t[k2][0][x2]
+            a=t[k1][x2]
+            b=t[k2][x2]
             sz[x]=int(a+(b-a)/c)
             x2=x2+1
         #kocka közepe szamítas, a két oldal közepéből elsőnek ,utána majd a bal majd a jobb oldal kordinátáját
@@ -139,8 +177,8 @@ for M in range(6):
             k1=sz[5]-R
             k2=sz[4]-R
             for l in range(R):
-                for y in range(R):
-                    AVG=AVG+img2[k1+l][k2+y]
+                for p in range(R):
+                    AVG=AVG+img2[k1+l][k2+p]
             AVG=(AVG/(R*R))
             AVG=AVG.astype('i')
             #a szín lekérdezése /azonosítása/tárolása CN-ben
@@ -182,11 +220,11 @@ for M in range(6):
 
     # itt CN segítségével feltölti az oldalt ha nem talál meg 9 színt akkor hibás lesz
     for l in range(6) :
-        if CN[0] == Cube[i][1][1]:
+        if CN[0] == Cube[l][1][1]:
             
             Cube[l][1][1]=CN[0]
             Cube[l][1][0]=CN[1]
-            Cube[li][1][2]=CN[2]
+            Cube[l][1][2]=CN[2]
             
             Cube[l][0][1]=CN[3]
             Cube[l][0][0]=CN[4]
