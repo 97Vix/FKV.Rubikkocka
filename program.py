@@ -138,9 +138,9 @@ for M in range(6):
             R=R*2+1
             k1=sz[5]-R
             k2=sz[4]-R
-            for i in range(R):
+            for l in range(R):
                 for y in range(R):
-                    AVG=AVG+img2[k1+i][k2+y]
+                    AVG=AVG+img2[k1+l][k2+y]
             AVG=(AVG/(R*R))
             AVG=AVG.astype('i')
             #a szín lekérdezése /azonosítása/tárolása CN-ben
@@ -181,20 +181,20 @@ for M in range(6):
                     break
 
     # itt CN segítségével feltölti az oldalt ha nem talál meg 9 színt akkor hibás lesz
-    for i in range(6) :
+    for l in range(6) :
         if CN[0] == Cube[i][1][1]:
             
-            Cube[i][1][1]=CN[0]
-            Cube[i][1][0]=CN[1]
-            Cube[i][1][2]=CN[2]
+            Cube[l][1][1]=CN[0]
+            Cube[l][1][0]=CN[1]
+            Cube[li][1][2]=CN[2]
             
-            Cube[i][0][1]=CN[3]
-            Cube[i][0][0]=CN[4]
-            Cube[i][0][2]=CN[5]
+            Cube[l][0][1]=CN[3]
+            Cube[l][0][0]=CN[4]
+            Cube[l][0][2]=CN[5]
             
-            Cube[i][2][1]=CN[6]
-            Cube[i][2][0]=CN[7]
-            Cube[i][2][2]=CN[8]
+            Cube[l][2][1]=CN[6]
+            Cube[l][2][0]=CN[7]
+            Cube[l][2][2]=CN[8]
             
 print(Cube);
 cv2.waitKey(0)
